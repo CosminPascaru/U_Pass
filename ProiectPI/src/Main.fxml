@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="mainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="500.0" minWidth="800.0" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+   <children>
+      <MenuBar fx:id="menuBar" layoutX="-8.0" minHeight="25.0" minWidth="810.0" prefHeight="25.0" prefWidth="810.0" AnchorPane.leftAnchor="-8.0" AnchorPane.rightAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="aici">
+            <items>
+                  <MenuItem mnemonicParsing="false" text="submeniu" />
+                  <MenuItem mnemonicParsing="false" text="alt submeniu?" />
+                  <MenuItem mnemonicParsing="false" text="incredibil, alt submeniu" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="va fi un">
+            <items>
+              <MenuItem mnemonicParsing="false" text="wow" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="meniu">
+            <items>
+              <MenuItem mnemonicParsing="false" text="hello" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <FlowPane fx:id="buttonsPane" layoutY="25.0" maxHeight="35.0" minHeight="35.0" minWidth="810.0" prefHeight="35.0" prefWidth="810.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Button fx:id="button1" mnemonicParsing="false" text="aici">
+            	<tooltip><Tooltip fx:id="tooltip1" text="my tooltip1" /></tooltip>
+            </Button>
+            <Button fx:id="button2" mnemonicParsing="false" text="vor">
+            	<tooltip><Tooltip fx:id="tooltip2" text="my tooltip2" /></tooltip>
+            </Button>
+            <Button fx:id="button3" mnemonicParsing="false" text="fi">
+            	<tooltip><Tooltip fx:id="tooltip3" text="my tooltip3" /></tooltip>
+            </Button>
+            <Button fx:id="button4" mnemonicParsing="false" text="niste">
+            	<tooltip><Tooltip fx:id="tooltip4" text="my tooltip4" /></tooltip>
+            </Button>
+            <Button fx:id="button5" mnemonicParsing="false" text="icon-uri">
+            	<tooltip><Tooltip fx:id="tooltip5" text="my tooltip5" /></tooltip>
+            </Button>
+            <Button fx:id="button6" mnemonicParsing="false" onAction="#addDummyRow" text="generare date in tabel">
+            	<tooltip><Tooltip fx:id="tooltip6" text="my tooltip6" /></tooltip>
+            </Button>
+            <Separator orientation="VERTICAL" prefHeight="25.0" prefWidth="5.0" />
+            <TextField minWidth="270.0" prefHeight="25.0" prefWidth="270.0" promptText="Search [ inca nu functioneaza :( ]">
+               <FlowPane.margin>
+                  <Insets />
+               </FlowPane.margin></TextField>
+         </children>
+         <padding>
+            <Insets top="4.0" />
+         </padding>
+      </FlowPane>
+      <AnchorPane fx:id="logoPane" layoutY="65.0" minHeight="440.0" minWidth="810.0" prefHeight="450.0" prefWidth="810.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
+         <children>
+            <HBox alignment="TOP_CENTER" layoutX="243.0" layoutY="14.0" prefHeight="88.0" prefWidth="270.0" AnchorPane.leftAnchor="243.0" AnchorPane.rightAnchor="243.39999999999998">
+               <children>
+                  <ImageView fx:id="logoImage" fitHeight="190.0" fitWidth="313.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@U-Safe2.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+            <AnchorPane fx:id="loginPane" layoutX="125.0" layoutY="144.0" prefHeight="278.0" prefWidth="550.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="124.60000000000002">
+               <children>
+                  <TextField fx:id="usernameField" layoutX="139.0" layoutY="54.0" prefHeight="30.0" prefWidth="270.0" promptText="Username" AnchorPane.leftAnchor="140.0" AnchorPane.rightAnchor="140.0">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font>
+                  </TextField>
+                  <PasswordField fx:id="passwordField" layoutX="139.0" layoutY="108.0" prefHeight="30.0" prefWidth="270.0" promptText="Password" AnchorPane.leftAnchor="140.0" AnchorPane.rightAnchor="140.0">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font>
+                  </PasswordField>
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="106.0" layoutY="14.0" prefHeight="18.0" prefWidth="340.0" text="Login as an existing user, or create a new user" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="loginButton" layoutX="139.0" layoutY="161.0" mnemonicParsing="false" onAction="#loginClick" prefHeight="30.0" prefWidth="125.0" text="Login">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="newUserButton" layoutX="284.0" layoutY="161.0" mnemonicParsing="false" onAction="#newUserClick" prefHeight="30.0" prefWidth="125.0" text="Create new user">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="fileSelectPane" disable="true" layoutX="125.0" layoutY="144.0" prefHeight="278.0" prefWidth="550.0" visible="false">
+               <children>
+                  <Button fx:id="connectButton" layoutX="69.0" layoutY="50.0" mnemonicParsing="false" onAction="#connectClick" prefHeight="30.0" prefWidth="450.0" text="Connect to a MySql server" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font></Button>
+                  <Button fx:id="openButton" layoutX="69.0" layoutY="160.0" mnemonicParsing="false" onAction="#openFileClick" prefHeight="30.0" prefWidth="450.0" text="Open a local file" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font></Button>
+                  <Button fx:id="createButton" layoutX="69.0" layoutY="105.0" mnemonicParsing="false" onAction="#createFileClick" prefHeight="30.0" prefWidth="450.0" text="Create a local file" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+                     <font>
+                        <Font size="13.0" />
+                     </font></Button>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <SplitPane fx:id="mainSplitPane" disable="true" dividerPositions="0.6280572219658515" layoutY="65.0" orientation="VERTICAL" prefHeight="450.0" prefWidth="810.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
+        <items>
+          <AnchorPane fx:id="upperAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="160.0">
+               <children>
+                  <TableView fx:id="table" editable="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columns>
+                      <TableColumn fx:id="title" maxWidth="300.0" minWidth="40.0" prefWidth="100.0" text="Title" />
+                      <TableColumn fx:id="username" maxWidth="300.0" minWidth="70.0" prefWidth="100.0" text="Username" />
+                      <TableColumn fx:id="url" maxWidth="300.0" minWidth="30.0" prefWidth="100.0" text="URL" />
+                      <TableColumn fx:id="notes" maxWidth="300.0" minWidth="50.0" prefWidth="100.0" text="Notes" />
+                      <TableColumn fx:id="lastModified" maxWidth="300.0" minWidth="90.0" prefWidth="100.0" text="Last Modified" />
+                    </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+          <AnchorPane fx:id="lowerAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Label fx:id="usernameLabel" layoutX="25.0" layoutY="55.0" prefHeight="20.0" text="Username">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font></Label>
+                  <Label fx:id="passwordLabel" layoutX="25.0" layoutY="85.0" prefHeight="20.0" text="Password">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font></Label>
+                  <Label fx:id="urlLabel" layoutX="25.0" layoutY="115.0" prefHeight="20.0" text="URL">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font></Label>
+                  <TextField fx:id="passwordText" editable="false" layoutX="100.0" layoutY="85.0" prefHeight="20.0" prefWidth="200.0">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font></TextField>
+                  <TextField fx:id="urlText" editable="false" layoutX="100.0" layoutY="115.0" prefHeight="25.0" prefWidth="302.0">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font></TextField>
+                  <Label fx:id="notesLabel" layoutX="450.0" layoutY="55.0" prefHeight="20.0" text="Notes">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font></Label>
+                  <TextField fx:id="usernameText" editable="false" layoutX="100.0" layoutY="55.0" prefHeight="20.0" prefWidth="200.0">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font></TextField>
+                  <Label fx:id="titleLabel" layoutX="40.0" layoutY="10.0" prefHeight="30.0" text="Your account!">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="310.0" layoutY="85.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" />
+                  <TextArea fx:id="notesText" cacheShape="false" editable="false" layoutX="450.0" layoutY="85.0" prefHeight="55.0" prefWidth="200.0" scaleShape="false" snapToPixel="false" wrapText="true">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font>
+                  </TextArea>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+      <Separator layoutX="-66.0" layoutY="60.0" prefWidth="810.0" style="-fx-background-color: #000000;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+   </children>
+</AnchorPane>
