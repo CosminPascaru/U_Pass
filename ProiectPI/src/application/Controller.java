@@ -181,20 +181,25 @@ public class Controller implements Initializable{
 	    	System.out.println("created a new file : " + selectedFile.getAbsolutePath());
 	    	try {
 	            selectedFile.createNewFile();
+	            fileSelectPane.setDisable(true);
+	    		fileSelectPane.setVisible(false);
+	    		loginPane.setVisible(true);
+	    		loginPane.setDisable(false);
+	    		mainAnchorPane.requestFocus();
 	         } catch (IOException ex) {
 	            ex.printStackTrace();
 	         }
 	    }
 		else {
-			System.out.println("there was some kind of error");
+			//System.out.println("there was some kind of error");
 		}
 		
 		//some more stuff around here probably
 		
-		fileSelectPane.setDisable(true);
+		/*fileSelectPane.setDisable(true);
 		fileSelectPane.setVisible(false);
 		loginPane.setVisible(true);
-		loginPane.setDisable(false);
+		loginPane.setDisable(false);*/
 		mainAnchorPane.requestFocus();
 	}
 
