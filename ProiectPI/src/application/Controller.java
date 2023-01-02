@@ -22,8 +22,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 
+/**
+ * This is the controller class, it has all the important functions
+ * @author pascaru
+ */
 public class Controller implements Initializable{
 	
+	/**
+	 * This class is needed to use the table [not sure if it can be moved in a separate file, will try later]
+	 * @author pascaru
+	 */
 	public class tableRow{
 		private SimpleStringProperty title;
 		private SimpleStringProperty username;
@@ -67,8 +75,9 @@ public class Controller implements Initializable{
 		public void setLastModified(String lastModified) {
 			this.lastModified = new SimpleStringProperty(lastModified);
 		}
-		
 	}
+	
+	// This is stuff that needed to be injected from the FXML file
 	
 	@FXML
 	private AnchorPane mainAnchorPane;
@@ -95,7 +104,6 @@ public class Controller implements Initializable{
 	private Button createButton;
 	@FXML
 	private Button openButton;
-	
 	
 	@FXML
 	private SplitPane mainSplitPane;
@@ -127,13 +135,13 @@ public class Controller implements Initializable{
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+	// Initializes some stuff. Visibility and some things for the table
 		fileSelectPane.setDisable(false);
 		fileSelectPane.setVisible(true);
 		loginPane.setVisible(false);
 		loginPane.setDisable(true);
 		mainSplitPane.setVisible(false);
 		mainSplitPane.setDisable(true);
-		
         title.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
         username.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
         url.setCellValueFactory(cellData -> cellData.getValue().urlProperty());
@@ -146,16 +154,17 @@ public class Controller implements Initializable{
         	
         	urlText.setText(newSelection.url.getValue());
         	notesText.setText(newSelection.notes.getValue());
-        	
         });
-       
-        
 	}
 	
 	public void tableClick(ActionEvent event) {
 		
 	}
-		
+	
+	/**
+	 * This function will handle the connection to a database 
+	 * @param event
+	 */
 	public void connectClick(ActionEvent event) {
 		
 		
@@ -169,10 +178,14 @@ public class Controller implements Initializable{
 		mainAnchorPane.requestFocus();
 	}
 	
+	/**
+	 * It handles file creation
+	 * @param event
+	 */
 	public void createFileClick(ActionEvent event) {
 		FileChooser createFile = new FileChooser();
 		createFile.setTitle("Create a new file");
-		createFile.setInitialDirectory(new File("C:\\")); //need to modify the opening folder
+		createFile.setInitialDirectory(new File(System.getProperty("user.home") + File.separator + "Documents"));
 		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PSWD files (*.pswd)", "*.pswd");
 		createFile.getExtensionFilters().add(extFilter);
 		File selectedFile = createFile.showSaveDialog(null);
@@ -203,10 +216,14 @@ public class Controller implements Initializable{
 		mainAnchorPane.requestFocus();
 	}
 
+	/**
+	 * And this one handles file opening
+	 * @param event
+	 */
 	public void openFileClick(ActionEvent event) {
 		FileChooser openFile = new FileChooser();
-		openFile.setTitle("Adina e gay");
-		openFile.setInitialDirectory(new File("C:\\")); //need to modify the opening folder
+		openFile.setTitle("Open an existing file");
+		openFile.setInitialDirectory(new File(System.getProperty("user.home") + File.separator + "Documents"));
 		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PSWD files (*.pswd)", "*.pswd");
 		openFile.getExtensionFilters().add(extFilter);
 		
@@ -269,10 +286,12 @@ public class Controller implements Initializable{
 		mainAnchorPane.requestFocus();
 	}
 	
+
 	
-	
-	
-	
+	/**
+	 * uhm, just to test the table
+	 * @param event
+	 */
 	public void addDummyRow(ActionEvent event) {
 		
 		 ObservableList<tableRow> tableRows = FXCollections.observableArrayList(
@@ -286,36 +305,6 @@ public class Controller implements Initializable{
 	            new tableRow("title8", "username8", "url8", "note8", "date8")
 	    );
 		table.setItems(tableRows);
-		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }
