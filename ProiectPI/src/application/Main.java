@@ -1,13 +1,11 @@
 package application;
 	
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-
 /**
  * The main class, does the things it needs to do in a FX project
  * @author pascaru
@@ -27,9 +25,9 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage){
 		try {
-			Parent root = FXMLLoader.load(getClass().getResource("/Main.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource("/application/Main.fxml"));
 			scene = new Scene(root);
-			String css = this.getClass().getResource("application.css").toExternalForm();
+			String css = this.getClass().getResource("/application/application.css").toExternalForm();
 			root.requestFocus();
 			
 			stage.setMinHeight(540);
@@ -39,7 +37,7 @@ public class Main extends Application {
 			
 			stage.setTitle("U-Safe");
 			
-			Image icon = new Image("logo.png");
+			Image icon = new Image("/logo.png");
 			stage.getIcons().add(icon);
 		
 			scene.getStylesheets().add(css);
