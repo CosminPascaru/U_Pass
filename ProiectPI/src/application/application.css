@@ -1,16 +1,4 @@
-#mainAnchorPane, #mainSplitPane, #upperPane, #lowePane{
-	-fx-background-color: white;
-}
-
-#fileSelectPane{
-	-fx-background-color: white;
-}
-
-#buttonsPane{
-	-fx-background-color: white;
-}
-
-#logoPane{
+#mainAnchorPane, #mainSplitPane, #upperAnchorPane, #lowerAnchorPane, #buttonsPane, #fileSelectPane, #logoPane, #entryPane, #dataPane,#connectPane, #loginPane{
 	-fx-background-color: white;
 }
 
@@ -22,34 +10,36 @@
 .menu-bar > .container > .menu-button:hover,
 .menu-bar > .container > .menu-button:focused,
 .menu-bar > .container > .menu-button:showing{
-	-fx-background-color: #f68c2e;
+	-fx-background-color: #236090;
 }
 /*   #f68c2e orange  #236090 blue*/
 .menu-item:focused, .menu-item:hovered {
-    -fx-background-color: #f68c2e;
+    -fx-background-color: #236090;
 }
 
-#connectButton, #openButton, #createButton, #loginButton, #newUserButton{ 
+#entryOk{
+	-fx-background-radius: 0;
+	-fx-text-fill: #FFFFFF;
+	-fx-background-color: #236090;
+}
+
+#connectButton, #openButton, #createButton, #loginButton, #newUserButton, #entryCancel, #connectButton2{ 
 	-fx-background-radius: 0;
 	-fx-background-color: #c7c7c7;
 }
 
-#connectButton:hover, #openButton:hover, #createButton:hover, #loginButton:hover, #newUserButton:hover{
+#connectButton:hover, #openButton:hover, #createButton:hover, #loginButton:hover, #newUserButton:hover, #entryOk:hover, #entryCancel:hover, #connectButton2:hover{
 	-fx-background-radius: 0;
 	-fx-text-fill: #FFFFFF;
 	-fx-background-color: #9c9c9c;
 }
 
-#connectButton:focused, #openButton:focused, #createButton:focused, #loginButton:focused, #newUserButton:focused{
+#connectButton:focused, #openButton:focused, #createButton:focused, #loginButton:focused, #newUserButton:focused, #entryOk:focused, #entryCancel:focused, #connectButton2:focused{
 	-fx-background-radius: 0;
 	-fx-text-fill: #FFFFFF;
-	-fx-background-color: #f68c2e;
+	-fx-background-color: #236090;
 }
 
-.label{
-	-fx-font-family: consolas;
-	-fx-font-size: 10pt;
-}
 
 #titleLabel{
 	-fx-font-size: 16pt;
@@ -63,12 +53,12 @@
 	-fx-background-color: lightgrey;
 }
 .button:focused{
-	-fx-background-color: grey;
+	-fx-background-color: #236090;
 }
 
 #tooltip1, #tooltip2, #tooltip3, #tooltip4, #tooltip5, #tooltip6{
 	-fx-background-radius: 1;
-	 -fx-background-color: green;
+	 -fx-background-color: #236090;
 	 -fx-effect: dropshadow(gaussian, rgba(10, 10, 10, 0.4), 3, 0.5, 2, 2);
 }
 

@@ -6,11 +6,33 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import extraClasses.TableRow;
 import extraClasses.User;
@@ -47,12 +69,14 @@ public class Controller implements Initializable{
 
 	
 	// This is stuff that needed to be injected from the FXML file
-	
 	@FXML
 	private AnchorPane mainAnchorPane;
 	
 	@FXML
 	private SplitPane mainPane;
+	
+	@FXML
+	private	AnchorPane connectPane;
 	
 	@FXML
 	private Button menuAdd;
@@ -136,7 +160,20 @@ public class Controller implements Initializable{
 	@FXML
 	private Button entryPasswordButton;
 	
+	@FXML
+	private PasswordField showPasswordField;
 	
+	@FXML
+	private Button showPasswordButton;
+	
+	@FXML
+	private TextField connectDatabase;
+	@FXML
+	private TextField connectUser;
+	@FXML
+	private PasswordField connectPassword;
+	@FXML
+	private Label connectWarning;
 	
 	File selectedFile;
 	static User userContent;
@@ -163,6 +200,8 @@ public class Controller implements Initializable{
 		fileSelectPane.setVisible(true);
 		loginPane.setVisible(false);
 		loginPane.setDisable(true);
+		connectPane.setVisible(false);
+		connectPane.setDisable(true);
 		mainSplitPane.setVisible(false);
 		mainSplitPane.setDisable(true);
 		dataPane.setDisable(false);
@@ -174,6 +213,21 @@ public class Controller implements Initializable{
 		addPassword.setDisable(false);
 		addPasswordText.setVisible(false);
 		addPasswordText.setDisable(true);
+		connectWarning.setVisible(false);
+		showPasswordField.setVisible(false);
+		showPasswordField.setDisable(true);
+		passwordText.setVisible(true);
+		passwordText.setDisable(false);
+		addPassword.setVisible(false);
+		addPassword.setDisable(true);
+		addPasswordText.setVisible(true);
+		addPasswordText.setDisable(false);
+		showPasswordField.setVisible(true);
+		showPasswordField.setDisable(false);
+		passwordText.setVisible(false);
+		passwordText.setDisable(true);
+		titleLabel.setText("Your account!");
+		connectWarning.setText("There was an error! Check the login credentials");
 		loginWarning.setText("Wrong password!");
 		entryLabel.setText("Add a new entry");
 		
@@ -191,9 +245,15 @@ public class Controller implements Initializable{
 		lupa.setPreserveRatio(true);
 		
 		menuAdd.setGraphic(plus);
+		
 		menuDel.setGraphic(minus);
+		
 		menuMod.setGraphic(modify);
+		menuAdd.setDisable(true);
+		menuMod.setDisable(true);
+		menuDel.setDisable(true);
 		entryPasswordButton.setGraphic(lupa);
+		showPasswordButton.setGraphic(lupa);
 		
         title.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
         username.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
@@ -208,6 +268,7 @@ public class Controller implements Initializable{
         		selectedTitle = titleLabel.getText();
         		selectedUsername = usernameText.getText();
         		passwordText.setText(getPassword(selectedUsername, selectedTitle));
+        		showPasswordField.setText(getPassword(selectedUsername, selectedTitle));
         		urlText.setText(newSelection.getUrl().getValue());
         		notesText.setText(newSelection.getNotes().getValue());
         		selectedPassword = passwordText.getText();
@@ -244,6 +305,9 @@ public class Controller implements Initializable{
 		
 	}
 	
+	static String dbAdress;
+	static String dbUser;
+	static String dbPassword;
 	
 	/**
 	 * This function will handle the connection to a database 
@@ -251,21 +315,82 @@ public class Controller implements Initializable{
 	 * @param event
 	 */
 	public void connectClick(ActionEvent event) {
-		
-		//some stuff here
-		
+		usernameText.setText(null);
+		passwordText.setText(null);
+		showPasswordField.setText(null);
+		urlText.setText(null);
+		notesText.setText(null);
+		titleLabel.setText("Your account!");
+        fileSelectPane.setDisable(true);
 		fileSelectPane.setVisible(false);
-		fileSelectPane.setDisable(true);
-		loginPane.setVisible(true);
-		loginPane.setDisable(false);
+		connectPane.setVisible(true);
+		connectPane.setDisable(false);
+		loginPane.setVisible(false);
+		loginPane.setDisable(true);
+		mainSplitPane.setVisible(false);
+		mainSplitPane.setDisable(true);
+		
+		
 		mainAnchorPane.requestFocus();
 	}
+	
+	public static Connection conn;
+	public static Statement stmt;
+	public static Boolean connected = false;
+	
+	public void connectClick2(ActionEvent event) {
+		dbAdress = "jdbc:mysql://localhost:3306/" + connectDatabase.getText();
+		dbUser = connectUser.getText();
+		dbPassword = connectPassword.getText();
+		Boolean nullCheck;
+		try {
+			conn = DriverManager.getConnection(dbAdress, dbUser, dbPassword);
+			
+			stmt = conn.createStatement();
+			
+			ResultSet set = stmt.executeQuery("SELECT * FROM accounts, meta_data\r\n"
+					+ "WHERE accounts.acc_id = meta_data.acc_id;");
+			userContent = new User();
+			String tempPassword;
+			while(set.next()) {
+				tempPassword = decryptPassword(set.getString("acc_pswd"));
+				userContent.getData().add(new UserData(set.getString("acc_title"), set.getString("acc_uname"), tempPassword, set.getString("acc_url"), set.getString("acc_notes"), set.getString("m_date")));
+			}
+			
+			connectDatabase.setText(null);
+			connectUser.setText(null);
+			connectPassword.setText(null);
+			
+			connected = true;
+			initTable();
+			
+			
+		} catch (Exception e) {
+			connectWarning.setVisible(true);
+			mainAnchorPane.requestFocus();
+			//return;
+			//e.printStackTrace();
+			
+		}
+		
+		
+		
+	}
+	
+	
 	
 	/**
 	 * It handles file creation and some initialization
 	 * @param event
 	 */
 	public void createFileClick(ActionEvent event) {
+		connected = false;
+		usernameText.setText(null);
+		passwordText.setText(null);
+		showPasswordField.setText(null);
+		urlText.setText(null);
+		notesText.setText(null);
+		titleLabel.setText("Your account!");
 		loginWarning.setVisible(false);
 		FileChooser createFile = new FileChooser();
 		createFile.setTitle("Create a new file");
@@ -279,6 +404,8 @@ public class Controller implements Initializable{
 	            selectedFile.createNewFile();
 	            fileSelectPane.setDisable(true);
 	    		fileSelectPane.setVisible(false);
+	    		connectPane.setVisible(false);
+	    		connectPane.setDisable(true);
 	    		loginPane.setVisible(true);
 	    		loginPane.setDisable(false);
 	    		mainSplitPane.setVisible(false);
@@ -302,8 +429,14 @@ public class Controller implements Initializable{
 	 * @throws IOException 
 	 * @throws MalformedURLException 
 	 */
-	public void openFileClick(ActionEvent event) throws MalformedURLException, IOException, URISyntaxException {
-		
+	public void openFileClick(ActionEvent event){
+		connected = false;
+		titleLabel.setText("Your account!");
+		usernameText.setText(null);
+		passwordText.setText(null);
+		showPasswordField.setText(null);
+		urlText.setText(null);
+		notesText.setText(null);
 		loginWarning.setVisible(false);
 		FileChooser openFile = new FileChooser();
 		openFile.setTitle("Open an existing file");
@@ -316,6 +449,8 @@ public class Controller implements Initializable{
 	    if (selectedFile != null) {
 	    	fileSelectPane.setDisable(true);
 		    fileSelectPane.setVisible(false);
+		    connectPane.setVisible(false);
+    		connectPane.setDisable(true);
 			loginPane.setVisible(true);
 			loginPane.setDisable(false);
 			mainSplitPane.setVisible(false);
@@ -359,6 +494,7 @@ public class Controller implements Initializable{
 				}
 			}
 		}
+		mainAnchorPane.requestFocus();
 		
 	}
 	
@@ -375,6 +511,9 @@ public class Controller implements Initializable{
 	 * it converts from userContent to the TableRows and it adds the rows to the TableView
 	 */
 	public void initTable() {
+		menuAdd.setDisable(false);
+		menuMod.setDisable(false);
+		menuDel.setDisable(false);
 		loginPane.setVisible(false);
 		loginPane.setDisable(true);
 		mainSplitPane.setVisible(true);
@@ -389,15 +528,47 @@ public class Controller implements Initializable{
 	public Boolean mod;
 	
 	public void addClick(ActionEvent event){
-		
+		menuAdd.setDisable(true);
+		menuMod.setDisable(true);
+		menuDel.setDisable(true);
+		showPasswordClick(new ActionEvent());
 		dataPane.setDisable(true);
 		dataPane.setVisible(false);
 		entryPane.setDisable(false);
 		entryPane.setVisible(true);
+		entryLabel.setText("Add a new entry");
 		mod = false;
 	}
 	
-	public void delClick(ActionEvent event) {
+	public void WriteObjectToDatabase() throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidAlgorithmParameterException, BadPaddingException, IllegalBlockSizeException{
+		try {
+			stmt.execute("SET FOREIGN_KEY_CHECKS = 0;");
+			stmt.executeUpdate("TRUNCATE accounts;");
+			stmt.execute("SET FOREIGN_KEY_CHECKS = 1;");
+			stmt.executeUpdate("TRUNCATE meta_data;");
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			//e1.printStackTrace();/////////////////////////////////////////////////////////////////////////////////
+		}
+		int index = 1;
+		String tempPassword;
+		for(UserData x : userContent.getData()) {
+			try {
+				tempPassword = encryptPassword(x.getPassword());
+				stmt.executeUpdate("INSERT INTO accounts (acc_title, acc_uname, acc_pswd, acc_url, acc_notes)\r\n"
+						+ "VALUES ('" + x.getTitle() + "', '" + x.getUsername() + "', '" + tempPassword + "', '" + x.getUrl() + "', '" + x.getNotes() + "');");
+				stmt.executeUpdate("INSERT INTO meta_data (acc_id, m_date)\r\n"
+						+ "VALUES ('" + index + "', '" + x.getModifyDate() + "');");
+				index++;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();/////////////////////////////////////////////////////////////////////////////
+			}
+			
+		}
+	}
+	
+	public void delClick(ActionEvent event) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidAlgorithmParameterException, BadPaddingException, IllegalBlockSizeException{
 		TableRow delete = new TableRow();
 		UserData moreDelete = new UserData();
 		if(selectedTitle != null && selectedUsername != null) {
@@ -417,12 +588,18 @@ public class Controller implements Initializable{
 				selectedTitle = null;
 				selectedUsername = null;
 				usernameText.setText(selectedUsername);
+				showPasswordField.setText(null);
 				passwordText.setText(null);
 				urlText.setText(null);
 				notesText.setText(null);
 				TableRows.remove(delete);
 				userContent.getData().remove(moreDelete);
-				User.WriteObjectToFile(selectedFile, userContent);
+				if(connected) {
+					WriteObjectToDatabase();
+				}
+				else {
+					User.WriteObjectToFile(selectedFile, userContent);
+				}
 			}
 		}
 	}
@@ -430,6 +607,9 @@ public class Controller implements Initializable{
 	
 	
 	public void modClick(ActionEvent event) {
+		menuAdd.setDisable(true);
+		menuMod.setDisable(true);
+		menuDel.setDisable(true);
 		dataPane.setDisable(true);
 		dataPane.setVisible(false);
 		entryPane.setDisable(false);
@@ -438,12 +618,13 @@ public class Controller implements Initializable{
 		addTitle.setText(selectedTitle);
 		addUsername.setText(selectedUsername);
 		addPassword.setText(selectedPassword);
+		addPasswordText.setText(selectedPassword);
 		addUrl.setText(selectedUrl);
 		addNotes.setText(selectedNotes);
 		mod = true;
 	}
 	
-	public void entryOkClick(ActionEvent event) {
+	public void entryOkClick(ActionEvent event) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidAlgorithmParameterException, BadPaddingException, IllegalBlockSizeException {
 		if(mod == false) {
 			entryTitle = addTitle.getText();
 			entryUsername = addUsername.getText();
@@ -469,15 +650,24 @@ public class Controller implements Initializable{
 						return;
 					}
 				}
-				System.out.print(entryPassword);
 				userContent.getData().add(new UserData(entryTitle, entryUsername, entryPassword, entryUrl, entryNotes, entryDate));
 				TableRow row = new TableRow(entryTitle, entryUsername, entryUrl, entryNotes, entryDate);
 				TableRows.add(row);
 				addTitle.setText(null);
 				addUsername.setText(null);
+				menuAdd.setDisable(false);
+				menuMod.setDisable(false);
+				menuDel.setDisable(false);
 				addPassword.setText(null);
+				addPasswordText.setText(null);
 				addUrl.setText(null);
 				addNotes.setText(null);
+				titleLabel.setText("Your account!");
+				usernameText.setText(null);
+				passwordText.setText(null);
+				showPasswordField.setText(null);
+				urlText.setText(null);
+				notesText.setText(null);
 				dataPane.setDisable(false);
 				dataPane.setVisible(true);
 				entryPane.setDisable(true);
@@ -485,14 +675,19 @@ public class Controller implements Initializable{
 				entryLabel.setText("Add a new entry");
 				mainAnchorPane.requestFocus();
 				table.getSelectionModel().clearSelection();
-				User.WriteObjectToFile(selectedFile, userContent);
+				if(connected) {
+					WriteObjectToDatabase();
+				}
+				else {
+					User.WriteObjectToFile(selectedFile, userContent);
+				}
 			}
 		}
 		else {
 			entryTitle = addTitle.getText();
 			entryUsername = addUsername.getText();
 			if(addPassword.isVisible()) {
-				entryPassword = addPassword.getText();
+				entryPassword = addPasswordText.getText();
 			}
 			else {
 				entryPassword = addPasswordText.getText();
@@ -514,6 +709,16 @@ public class Controller implements Initializable{
 				addTitle.setText(null);
 				addUsername.setText(null);
 				addPassword.setText(null);
+				addPasswordText.setText(null);
+				menuAdd.setDisable(false);
+				menuMod.setDisable(false);
+				menuDel.setDisable(false);
+				titleLabel.setText("Your account!");
+				usernameText.setText(null);
+				passwordText.setText(null);
+				showPasswordField.setText(null);
+				urlText.setText(null);
+				notesText.setText(null);
 				addUrl.setText(null);
 				addNotes.setText(null);
 				dataPane.setDisable(false);
@@ -523,7 +728,12 @@ public class Controller implements Initializable{
 				entryLabel.setText("Add a new entry");
 				table.getSelectionModel().clearSelection();
 				mainAnchorPane.requestFocus();
-				User.WriteObjectToFile(selectedFile, userContent);
+				if(connected) {
+					WriteObjectToDatabase();
+				}
+				else {
+					User.WriteObjectToFile(selectedFile, userContent);
+				}
 			}
 		}
 		mod = false;
@@ -535,11 +745,15 @@ public class Controller implements Initializable{
 		addPassword.setText(null);
 		addPassword.setText(null);
 		addNotes.setText(null);
-		
+		menuAdd.setDisable(false);
+		menuMod.setDisable(false);
+		menuDel.setDisable(false);
 		dataPane.setDisable(false);
 		dataPane.setVisible(true);
 		entryPane.setDisable(true);
 		entryPane.setVisible(false);
+		
+		titleLabel.setText("Your account!");
 		
 		mainAnchorPane.requestFocus();
 	}	
@@ -559,14 +773,84 @@ public class Controller implements Initializable{
 			addPasswordText.setVisible(false);
 			addPasswordText.setDisable(true);
 		}
-		
 		mainAnchorPane.requestFocus();
-		
+	}
+	
+	public void showPasswordClick(ActionEvent event) {
+		if(showPasswordField.isVisible()) {
+			passwordText.setText(showPasswordField.getText());
+			showPasswordField.setVisible(false);
+			showPasswordField.setDisable(true);
+			passwordText.setVisible(true);
+			passwordText.setDisable(false);
+		}
+		else {
+			showPasswordField.setText(passwordText.getText());
+			showPasswordField.setVisible(true);
+			showPasswordField.setDisable(false);
+			passwordText.setVisible(false);
+			passwordText.setDisable(true);
+		}
+		mainAnchorPane.requestFocus();
 	}
 	
 	public void GitClick(ActionEvent event) throws MalformedURLException, IOException, URISyntaxException{
 		Desktop.getDesktop().browse(new URL("https://github.com/CosminPascaru/U_Pass").toURI());
 	}
 	
+	public static String encrypt(String algorithm, String input, SecretKey key,
+		    IvParameterSpec iv) throws NoSuchPaddingException, NoSuchAlgorithmException,
+		    InvalidAlgorithmParameterException, InvalidKeyException,
+		    BadPaddingException, IllegalBlockSizeException {
+		    
+		    Cipher cipher = Cipher.getInstance(algorithm);
+		    cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+		    byte[] cipherText = cipher.doFinal(input.getBytes());
+		    return Base64.getEncoder()
+		        .encodeToString(cipherText);
+		}
 	
+	public static String decrypt(String algorithm, String cipherText, SecretKey key, IvParameterSpec iv) throws NoSuchPaddingException, NoSuchAlgorithmException,
+		    InvalidAlgorithmParameterException, InvalidKeyException,
+		    BadPaddingException, IllegalBlockSizeException {
+		    
+		    Cipher cipher = Cipher.getInstance(algorithm);
+		    cipher.init(Cipher.DECRYPT_MODE, key, iv);
+		    byte[] plainText = cipher.doFinal(Base64.getDecoder()
+		        .decode(cipherText));
+		    return new String(plainText);
+	}
+	
+	public static IvParameterSpec generateIv() {
+	    byte[] iv = new byte[16];
+	    new SecureRandom().nextBytes(iv);
+	    return new IvParameterSpec(iv);
+	}
+	
+	public static SecretKey getKeyFromPassword(String password, String salt)
+		    throws NoSuchAlgorithmException, InvalidKeySpecException {
+		    
+		    SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+		    KeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 65536, 256);
+		    SecretKey secret = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
+		    return secret;
+		}
+	
+	String salt = "87626358";
+	String encryptionPassword = "this is an actual encryption password";
+	byte[] iv = { 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8 };
+	IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+	
+	
+	public String encryptPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, NoSuchPaddingException, InvalidAlgorithmParameterException, BadPaddingException, IllegalBlockSizeException {
+		 SecretKey key = getKeyFromPassword(encryptionPassword,salt);
+		 String cipherText = encrypt("AES/CBC/PKCS5Padding", password, key, ivParameterSpec);
+		 return cipherText;
+	}
+	
+	public String decryptPassword(String fakePassword) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, NoSuchPaddingException, InvalidAlgorithmParameterException, BadPaddingException, IllegalBlockSizeException {
+		SecretKey key = getKeyFromPassword(encryptionPassword,salt);
+		String decryptedCipherText = decrypt("AES/CBC/PKCS5Padding", fakePassword, key, ivParameterSpec);
+		return decryptedCipherText;
+	}
 }

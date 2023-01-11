@@ -27,16 +27,12 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" text="Connect to Database" />
+                  <MenuItem mnemonicParsing="false" onAction="#connectClick" text="Connect to Database" />
                   <MenuItem mnemonicParsing="false" onAction="#createFileClick" text="New File" />
                   <MenuItem mnemonicParsing="false" onAction="#openFileClick" text="Open File" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="View">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Dark Teme" />
-            </items>
-          </Menu>
+          <Menu mnemonicParsing="false" text="View" />
           <Menu mnemonicParsing="false" text="About">
             <items>
               <MenuItem fx:id="GitButton" mnemonicParsing="false" onAction="#GitClick" text="GitHub Repository" />
@@ -46,29 +42,42 @@
       </MenuBar>
       <FlowPane fx:id="buttonsPane" layoutY="25.0" maxHeight="35.0" minHeight="35.0" minWidth="810.0" prefHeight="35.0" prefWidth="810.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
+            <Separator orientation="VERTICAL" prefHeight="25.0">
+               <padding>
+                  <Insets left="3.0" />
+               </padding>
+            </Separator>
             <Button fx:id="menuAdd" mnemonicParsing="false" onAction="#addClick">
-            	<tooltip><Tooltip fx:id="tooltip1" text="my tooltip1" /></tooltip>
+            	<tooltip><Tooltip fx:id="tooltip1" text="Add a new entry" /></tooltip>
             </Button>
+            <Separator orientation="VERTICAL" prefHeight="20.0">
+               <padding>
+                  <Insets left="3.0" />
+               </padding>
+            </Separator>
             <Button fx:id="menuDel" mnemonicParsing="false" onAction="#delClick">
-            	<tooltip><Tooltip fx:id="tooltip2" text="my tooltip2" /></tooltip>
+            	<tooltip><Tooltip fx:id="tooltip2" text="Delete the selected entry" /></tooltip>
             </Button>
+            <Separator orientation="VERTICAL" prefHeight="20.0">
+               <padding>
+                  <Insets left="3.0" />
+               </padding>
+            </Separator>
             <Button fx:id="menuMod" mnemonicParsing="false" onAction="#modClick">
-            	<tooltip><Tooltip fx:id="tooltip3" text="my tooltip3" /></tooltip>
+            	<tooltip><Tooltip fx:id="tooltip3" text="Modify the selected entry" /></tooltip>
             </Button>
-            <Button fx:id="button4" mnemonicParsing="false">
-            	<tooltip><Tooltip fx:id="tooltip4" text="my tooltip4" /></tooltip>
-            </Button>
-            <Button fx:id="button5" mnemonicParsing="false">
-            	<tooltip><Tooltip fx:id="tooltip5" text="my tooltip5" /></tooltip>
-            </Button>
-            <Button fx:id="button6" mnemonicParsing="false" text="test">
-            	<tooltip><Tooltip fx:id="tooltip6" text="my tooltip6" /></tooltip>
-            </Button>
-            <Separator orientation="VERTICAL" prefHeight="25.0" prefWidth="5.0" />
-            <TextField minWidth="270.0" prefHeight="25.0" prefWidth="270.0" promptText="Search [ inca nu functioneaza :( ]">
-               <FlowPane.margin>
-                  <Insets />
-               </FlowPane.margin></TextField>
+            <Separator orientation="VERTICAL" prefHeight="25.0" prefWidth="5.0">
+               <padding>
+                  <Insets left="3.0" />
+               </padding></Separator>
+            <Label text="You don't need to worry, all the passwords are stored securely!">
+               <font>
+                  <Font name="System Bold Italic" size="13.0" />
+               </font>
+               <padding>
+                  <Insets left="60.0" />
+               </padding>
+            </Label>
          </children>
          <padding>
             <Insets top="4.0" />
@@ -85,7 +94,33 @@
                   </ImageView>
                </children>
             </HBox>
-            <AnchorPane fx:id="loginPane" layoutX="125.0" layoutY="144.0" prefHeight="278.0" prefWidth="550.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="124.60000000000002">
+            <AnchorPane fx:id="connectPane" layoutX="125.0" layoutY="144.0" prefHeight="278.0" prefWidth="200.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="125.0">
+               <children>
+                  <Label alignment="CENTER" layoutX="60.0" layoutY="36.0" prefHeight="30.0" text="Connect to a database" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0">
+                     <font>
+                        <Font name="Consolas" size="15.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="connectDatabase" layoutX="199.0" layoutY="86.0" prefHeight="30.0" promptText="Database" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="120.0">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font></TextField>
+                  <TextField fx:id="connectUser" layoutX="120.0" layoutY="124.0" prefHeight="30.0" promptText="User" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="120.0">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font></TextField>
+                  <PasswordField fx:id="connectPassword" layoutX="120.0" layoutY="163.0" prefHeight="30.0" promptText="Password" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="120.0">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font></PasswordField>
+                  <Button fx:id="connectButton2" layoutX="199.0" layoutY="206.0" mnemonicParsing="false" onAction="#connectClick2" prefHeight="26.0" prefWidth="150.0" text="Connect" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="120.0">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font></Button>
+                  <Label fx:id="connectWarning" alignment="CENTER" layoutX="63.0" layoutY="60.0" prefHeight="18.0" prefWidth="423.0" text="Label" textFill="#fc0909" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="loginPane" disable="true" layoutX="125.0" layoutY="144.0" prefHeight="278.0" prefWidth="550.0" visible="false" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="124.60000000000002">
                <children>
                   <PasswordField fx:id="passwordField" layoutX="140.0" layoutY="105.0" prefHeight="30.0" promptText="Password" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="120.0">
                      <font>
@@ -94,7 +129,7 @@
                   </PasswordField>
                   <Label fx:id="loginLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="60.0" layoutY="49.0" prefHeight="30.0" text="Unlock using password" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0">
                      <font>
-                        <Font name="Consolas" size="13.0" />
+                        <Font name="Consolas" size="15.0" />
                      </font>
                   </Label>
                   <Button fx:id="loginButton" layoutX="120.0" layoutY="160.0" mnemonicParsing="false" onAction="#loginClick" prefHeight="30.0" prefWidth="310.0" text="Unlock">
@@ -131,9 +166,9 @@
                     <columns>
                       <TableColumn fx:id="title" maxWidth="300.0" minWidth="40.0" prefWidth="100.0" text="Title" />
                       <TableColumn fx:id="username" maxWidth="300.0" minWidth="70.0" prefWidth="100.0" text="Username" />
-                      <TableColumn fx:id="url" maxWidth="300.0" minWidth="30.0" prefWidth="100.0" text="URL" />
-                      <TableColumn fx:id="notes" maxWidth="300.0" minWidth="50.0" prefWidth="100.0" text="Notes" />
-                      <TableColumn fx:id="lastModified" maxWidth="300.0" minWidth="90.0" prefWidth="100.0" text="Last Modified" />
+                      <TableColumn fx:id="url" maxWidth="300.0" minWidth="30.0" prefWidth="185.6000518798828" text="URL" />
+                      <TableColumn fx:id="notes" maxWidth="300.0" minWidth="50.0" prefWidth="194.39996337890625" text="Notes" />
+                      <TableColumn fx:id="lastModified" maxWidth="398.4000122070313" minWidth="90.0" prefWidth="208.800048828125" text="Last Modified" />
                     </columns>
                   </TableView>
                </children>
@@ -142,95 +177,124 @@
                <children>
                   <AnchorPane fx:id="entryPane" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Label fx:id="entryLabel" layoutX="10.0" layoutY="10.0" prefHeight="18.0" prefWidth="186.0" text="Add a new entry">
+                        <Label fx:id="entryLabel" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="458.0" text="Add a new entry">
                            <font>
-                              <Font name="Consolas Bold" size="15.0" />
+                              <Font name="Consolas Bold" size="20.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="addTitle" layoutX="102.0" layoutY="32.0" prefHeight="26.0" prefWidth="186.0" />
-                        <TextField fx:id="addUsername" layoutX="102.0" layoutY="68.0" prefHeight="26.0" prefWidth="186.0" />
-                        <PasswordField fx:id="addPassword" disable="true" layoutX="102.0" layoutY="103.0" prefHeight="26.0" prefWidth="186.0" visible="false" />
-                        <TextField fx:id="addUrl" layoutX="360.0" layoutY="32.0" />
-                        <TextArea fx:id="addNotes" layoutX="360.0" layoutY="66.0" prefHeight="64.0" prefWidth="314.0" />
-                        <Label layoutX="22.0" layoutY="36.0" text="Title">
+                        <TextField fx:id="addTitle" layoutX="75.0" layoutY="45.0" prefHeight="27.0" prefWidth="250.0">
                            <font>
-                              <Font size="15.0" />
+                              <Font name="Consolas" size="14.0" />
+                           </font></TextField>
+                        <TextField fx:id="addUsername" layoutX="75.0" layoutY="77.0" prefHeight="27.0" prefWidth="250.0">
+                           <font>
+                              <Font name="Consolas" size="14.0" />
+                           </font></TextField>
+                        <PasswordField fx:id="addPassword" disable="true" layoutX="75.0" layoutY="109.0" prefHeight="27.0" prefWidth="250.0" visible="false">
+                           <font>
+                              <Font name="Consolas" size="14.0" />
+                           </font></PasswordField>
+                        <TextField fx:id="addUrl" layoutX="370.0" layoutY="45.0" prefHeight="27.0" prefWidth="300.0">
+                           <font>
+                              <Font name="Consolas" size="14.0" />
+                           </font></TextField>
+                        <TextArea fx:id="addNotes" layoutX="370.0" layoutY="79.0" prefHeight="59.0" prefWidth="300.0">
+                           <font>
+                              <Font name="Consolas" size="14.0" />
+                           </font></TextArea>
+                        <Label layoutX="10.0" layoutY="45.0" prefHeight="27.0" text="Title">
+                           <font>
+                              <Font name="Consolas" size="13.0" />
                            </font>
                         </Label>
-                        <Label layoutX="22.0" layoutY="70.0" text="Username">
+                        <Label layoutX="10.0" layoutY="77.0" prefHeight="27.0" text="Username">
                            <font>
-                              <Font size="15.0" />
+                              <Font size="13.0" />
                            </font>
                         </Label>
-                        <Label layoutX="22.0" layoutY="107.0" text="Password">
+                        <Label layoutX="10.0" layoutY="109.0" prefHeight="27.0" text="Password">
                            <font>
-                              <Font name="Consolas" size="15.0" />
+                              <Font name="Consolas" size="13.0" />
                            </font>
                         </Label>
-                        <Label layoutX="308.0" layoutY="36.0" text="URL">
+                        <Label layoutX="330.0" layoutY="44.0" prefHeight="27.0" text="URL">
                            <font>
-                              <Font size="15.0" />
+                              <Font name="Consolas" size="13.0" />
                            </font>
                         </Label>
-                        <Label layoutX="308.0" layoutY="70.0" text="Notes">
+                        <Label layoutX="330.0" layoutY="77.0" prefHeight="27.0" text="Notes">
                            <font>
-                              <Font size="15.0" />
+                              <Font name="Consolas" size="13.0" />
                            </font>
                         </Label>
-                        <Button fx:id="entryOk" layoutX="709.0" layoutY="45.0" mnemonicParsing="false" onAction="#entryOkClick" text="Ok" />
-                        <Button fx:id="entryCancel" layoutX="709.0" layoutY="94.0" mnemonicParsing="false" onAction="#entryCancelClick" text="Cancel" />
-                        <Button fx:id="entryPasswordButton" layoutX="295.0" layoutY="104.0" mnemonicParsing="false" onAction="#entryPasswordClick" />
-                        <TextField fx:id="addPasswordText" layoutX="102.0" layoutY="103.0" prefHeight="26.0" prefWidth="186.0" />
+                        <Button fx:id="entryOk" layoutX="700.0" layoutY="44.0" mnemonicParsing="false" onAction="#entryOkClick" prefWidth="70.0" text="Ok">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Button>
+                        <Button fx:id="entryCancel" layoutX="700.0" layoutY="108.0" mnemonicParsing="false" onAction="#entryCancelClick" prefHeight="27.0" prefWidth="70.0" text="Cancel">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Button>
+                        <Button fx:id="entryPasswordButton" layoutX="330.0" layoutY="109.0" mnemonicParsing="false" onAction="#entryPasswordClick" />
+                        <TextField fx:id="addPasswordText" layoutX="75.0" layoutY="109.0" prefHeight="27.0" prefWidth="250.0">
+                           <font>
+                              <Font name="Consolas" size="14.0" />
+                           </font></TextField>
                      </children>
                   </AnchorPane>
                   <AnchorPane fx:id="dataPane" disable="true" prefHeight="0.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Label fx:id="usernameLabel" layoutX="7.0" layoutY="34.0" prefHeight="20.0" text="Username">
+                        <Label fx:id="usernameLabel" layoutX="10.0" layoutY="45.0" prefHeight="27.0" text="Username">
                            <font>
                               <Font name="Consolas" size="13.0" />
                            </font>
                         </Label>
-                        <Label fx:id="passwordLabel" layoutX="7.0" layoutY="60.0" prefHeight="20.0" text="Password">
+                        <Label fx:id="passwordLabel" layoutX="10.0" layoutY="77.0" prefHeight="27.0" text="Password">
                            <font>
                               <Font name="Consolas" size="13.0" />
                            </font>
                         </Label>
-                        <Label fx:id="urlLabel" layoutX="15.0" layoutY="95.0" prefHeight="20.0" text="URL">
+                        <Label fx:id="urlLabel" layoutX="10.0" layoutY="109.0" prefHeight="27.0" text="URL">
                            <font>
                               <Font name="Consolas" size="13.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="passwordText" editable="false" layoutX="79.0" layoutY="58.0" prefHeight="20.0" prefWidth="200.0">
+                        <TextField fx:id="passwordText" editable="false" layoutX="75.0" layoutY="77.0" prefHeight="27.0" prefWidth="250.0">
                            <font>
-                              <Font name="Consolas" size="13.0" />
+                              <Font name="Consolas" size="14.0" />
                            </font>
                         </TextField>
-                        <TextField fx:id="urlText" editable="false" layoutX="79.0" layoutY="92.0" prefHeight="25.0" prefWidth="302.0">
+                        <TextField fx:id="urlText" editable="false" layoutX="75.0" layoutY="109.0" prefHeight="27.0" prefWidth="373.0">
                            <font>
-                              <Font name="Consolas" size="13.0" />
+                              <Font name="Consolas" size="14.0" />
                            </font>
                         </TextField>
-                        <Label fx:id="notesLabel" layoutX="399.0" layoutY="34.0" prefHeight="20.0" text="Notes">
+                        <Label fx:id="notesLabel" layoutX="470.0" layoutY="45.0" prefHeight="27.0" text="Notes">
                            <font>
                               <Font name="Consolas" size="13.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="usernameText" editable="false" layoutX="79.0" layoutY="31.0" prefHeight="20.0" prefWidth="200.0">
+                        <TextField fx:id="usernameText" editable="false" layoutX="75.0" layoutY="45.0" prefHeight="27.0" prefWidth="250.0">
                            <font>
-                              <Font name="Consolas" size="13.0" />
+                              <Font name="Consolas" size="14.0" />
                            </font>
                         </TextField>
-                        <Label fx:id="titleLabel" layoutX="26.0" layoutY="-1.0" prefHeight="30.0" text="Your account!">
+                        <Label fx:id="titleLabel" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="200.0" text="Your account!">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Button layoutX="286.0" layoutY="58.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" />
-                        <TextArea fx:id="notesText" cacheShape="false" editable="false" layoutX="399.0" layoutY="65.0" prefHeight="55.0" prefWidth="200.0" scaleShape="false" snapToPixel="false" wrapText="true">
+                        <Button fx:id="showPasswordButton" layoutX="330.0" layoutY="77.0" mnemonicParsing="false" onAction="#showPasswordClick" prefHeight="25.0" prefWidth="25.0" />
+                        <TextArea fx:id="notesText" cacheShape="false" editable="false" layoutX="470.0" layoutY="77.0" prefHeight="59.0" prefWidth="250.0" scaleShape="false" snapToPixel="false" wrapText="true">
                            <font>
                               <Font name="Consolas" size="13.0" />
                            </font>
                         </TextArea>
+                        <PasswordField fx:id="showPasswordField" editable="false" layoutX="75.0" layoutY="77.0" prefHeight="27.0" prefWidth="250.0" visible="false">
+                           <font>
+                              <Font name="Consolas" size="14.0" />
+                           </font>
+                        </PasswordField>
                      </children>
                   </AnchorPane>
                </children>

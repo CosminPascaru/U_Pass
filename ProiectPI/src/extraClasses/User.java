@@ -97,6 +97,8 @@ public class User implements Serializable{
 		return string;
 	}
 	
+	
+	
 	/**
 	 * Small function to convert from this.data to an ObservableList needed by the TableView
 	 * @return ObservableList<TableRow> 
